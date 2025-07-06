@@ -1,0 +1,10 @@
+[2025-07-05 16:11:23.565577] ✅ Handshake thành công, kích thước file: 7 bytes
+[2025-07-05 16:11:23.660873] Gửi file: not.txt thành công, thời gian xử lý: 0.09s
+[2025-07-05 16:12:13.289628] ✅ Handshake thành công, kích thước file: 9699 bytes
+[2025-07-05 16:12:13.326061] Gửi file: not.txt thành công, thời gian xử lý: 0.04s
+[2025-07-05 18:19:31.352840] ✅ Handshake thành công, kích thước file: 15 bytes
+[2025-07-05 18:19:31.509873] Gửi file: legal_doc.txt thành công, thời gian xử lý: 0.16s
+[2025-07-05 19:38:40.937332] 🤝 Handshake thành công với server, gửi file legal_doc.txt
+[2025-07-05 19:38:41.068198] Gửi file legal_doc.txt thành công
+[2025-07-05 22:19:36.484323] 🤝 Handshake thành công với server, gửi file legal_doc.txt
+[2025-07-05 22:19:36.519874] Gửi file legal_doc.txt thành công

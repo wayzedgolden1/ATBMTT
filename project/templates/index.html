@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gửi Tài Liệu Pháp Lý</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .bounce-on-submit {
+            animation: bounce 0.5s ease-in-out;
+        }
+        .notification {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        .success { background-color: #d1e7dd; color: #0f5132; }
+        .error { background-color: #f8d7da; color: #842029; }
+    </style>
+    <script>
+        function showNotification(message, isSuccess) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${isSuccess ? 'success' : 'error'}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.style.display = 'block', 10);
+            setTimeout(() => notification.remove(), 3000);
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.querySelector('form');
+            form.addEventListener('submit', (e) => {
+                const status = "{{ status }}";
+                if (status.includes("✅")) {
+                    showNotification('Gửi tài liệu thành công!', true);
+                } else if (status.includes("❌") || status.includes("⚠️")) {
+                    showNotification('Gửi tài liệu thất bại. Vui lòng kiểm tra!', false);
+                }
+            });
+        });
+    </script>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-md transform transition-all duration-300 hover:shadow-3xl">
+        <div class="text-center mb-6">
+            <i class="fas fa-paper-plane text-4xl text-blue-600 mb-2"></i>
+            <h1 class="text-3xl font-bold text-gray-800">Gửi Tài Liệu Pháp Lý</h1>
+            <p class="text-gray-500 mt-1">An toàn, bảo mật và nhanh chóng</p>
+        </div>
+        <form method="post" enctype="multipart/form-data" class="space-y-6">
+            <div>
+                <label for="file" class="block text-sm font-medium text-gray-700">Chọn file .txt</label>
+                <input type="file" id="file" name="file" accept=".txt" class="mt-2 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-green-50 file:text-green-700 hover:file:bg-green-100">
+            </div>
+            <button type="submit" class="w-full bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition duration-300 flex items-center justify-center space-x-2 bounce-on-submit">
+                <i class="fas fa-upload"></i>
+                <span>Gửi Tài Liệu</span>
+            </button>
+        </form>
+        <div class="mt-6 text-center">
+            <p class="text-gray-600 font-medium">Trạng thái: <span class="{{ 'text-green-600' if '✅' in status else 'text-red-600' if '❌' in status or '⚠️' in status else 'text-yellow-600' }}">{{ status }}</span></p>
+            {% if "⚠️" in status or "❌" in status %}
+                <p class="text-red-500 mt-2 text-sm">Vui lòng kiểm tra log hoặc tạo khóa nếu cần!</p>
+            {% elif "✅" in status %}
+                <p class="text-green-500 mt-2 text-sm">Gửi thành công! Kiểm tra ở phía nhận.</p>
+            {% else %}
+                <p class="text-yellow-500 mt-2 text-sm">Chờ xử lý...</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

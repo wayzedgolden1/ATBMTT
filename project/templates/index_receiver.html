@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhận Tài Liệu Pháp Lý</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        .pulse-on-success {
+            animation: pulse 1.5s infinite;
+        }
+        .notification {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            font-weight: 500;
+        }
+        .success { background-color: #d1e7dd; color: #0f5132; }
+        .error { background-color: #f8d7da; color: #842029; }
+    </style>
+    <script>
+        function showNotification(message, isSuccess) {
+            const notification = document.createElement('div');
+            notification.className = `notification ${isSuccess ? 'success' : 'error'} fade-in`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.style.display = 'block', 10);
+            setTimeout(() => notification.remove(), 4000);
+        }
+        function refreshStatus() {
+            location.reload();
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const status = "{{ status }}";
+            if (status.includes("✅")) {
+                showNotification('Tài liệu đã nhận thành công!', true);
+            } else if (status.includes("❌")) {
+                showNotification('Lỗi khi nhận tài liệu. Kiểm tra log!', false);
+            }
+        });
+    </script>
+</head>
+<body class="bg-gradient-to-br from-green-50 to-gray-200 min-h-screen flex items-center justify-center">
+    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-lg transform transition-all duration-300 hover:shadow-3xl">
+        <div class="text-center mb-6">
+            <i class="fas fa-inbox text-4xl text-green-600 mb-2"></i>
+            <h1 class="text-3xl font-bold text-gray-800">Nhận Tài Liệu Pháp Lý</h1>
+            <p class="text-gray-500 mt-1">Theo dõi và tải tài liệu an toàn</p>
+        </div>
+        <div class="text-center mb-6">
+            <p class="text-gray-600 font-medium mb-2">Trạng thái hiện tại:</p>
+            <p class="text-xl font-semibold {{ 'text-green-600 pulse-on-success' if '✅' in status else 'text-red-600' if '❌' in status else 'text-yellow-600' }}">{{ status }}</p>
+            {% if "⏳" in status %}
+                <p class="text-yellow-500 text-sm mt-2 flex items-center justify-center"><i class="fas fa-spinner animate-spin mr-2"></i>Đang chờ tài liệu...</p>
+            {% elif "❌" in status %}
+                <p class="text-red-500 mt-2 text-sm">Xảy ra lỗi. Kiểm tra log để biết thêm!</p>
+            {% elif "✅" in status %}
+                <a href="/static/report.txt" download class="mt-4 inline-block bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 transition duration-300 flex items-center justify-center space-x-2 pulse-on-success">
+                    <i class="fas fa-download"></i>
+                    <span>Tải File report.txt</span>
+                </a>
+                <p class="text-green-500 mt-2 text-sm">Tải ngay để xem nội dung!</p>
+            {% endif %}
+        </div>
+        <div class="text-center">
+            <button onclick="refreshStatus()" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300 flex items-center justify-center space-x-2">
+                <i class="fas fa-sync"></i>
+                <span>Làm mới trạng thái</span>
+            </button>
+        </div>
+    </div>
+</body>
+</html>
