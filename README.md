@@ -141,4 +141,4 @@ python app_sender.py
 
 ## ✨ Demo ảnh
 
-(Picture1.png)
+![Ảnh kết quả](Picture1.png)
