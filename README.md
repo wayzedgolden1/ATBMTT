@@ -139,13 +139,6 @@ python app_sender.py
 
 ---
 
-## 📄 Giấy phép
-
-Dự án dùng cho mục đích học tập – môn **Nhập môn An toàn Thông tin**.  
-Mọi quyền thuộc về nhóm thực hiện đề tài.
-
----
-
 ## ✨ Demo ảnh
 
 > *(Thêm ảnh giao diện hoặc log nếu có – tùy chọn)*
