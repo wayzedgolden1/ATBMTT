@@ -16,11 +16,10 @@ Ghi log thời gian giao dịch tại server trung gian
 Không có kết nối trực tiếp giữa người gửi và người nhận
 
 🧩 Kiến trúc hệ thống
-lua
-Sao chép
-Chỉnh sửa
+
 Sender <--> Server trung gian <--> Receiver
           (chỉ chuyển tiếp + log)
+          
 🛠️ Công nghệ sử dụng
 Python 3.10+
 
@@ -44,10 +43,9 @@ Yêu cầu thư viện:
 pip install pycryptodome flask
 
 2. Sinh khóa RSA
-bash
-Sao chép
-Chỉnh sửa
+
 python generate_keys.py
+
 Tạo các file:
 
 sender/sender_private.pem, sender_public.pem
@@ -68,16 +66,15 @@ Sao chép
 Chỉnh sửa
 cd receiver
 python app_receiver.py
-# Giao diện: http://127.0.0.1:5003
+
 Sender (Người gửi):
 
-bash
-Sao chép
-Chỉnh sửa
+
 cd sender
 python app_sender.py
-# Giao diện: http://127.0.0.1:5000
+
 4. Cách sử dụng
+5. 
 Truy cập giao diện người gửi tại http://127.0.0.1:5000
 
 Chọn file .txt bất kỳ (tối đa 10MB)
@@ -87,9 +84,8 @@ Gửi file → chờ phản hồi từ người nhận
 Trạng thái hiển thị ✅ Thành công hoặc ❌ Lỗi
 
 📂 Cấu trúc thư mục
-vbnet
-Sao chép
-Chỉnh sửa
+
+
 ├── server.py
 ├── shared.py
 ├── generate_keys.py
@@ -102,6 +98,7 @@ Chỉnh sửa
 │   ├── receiver_private.pem
 │   └── receiver_public.pem
 └── static/report.txt (file đã nhận)
+
 ✅ Tính năng nổi bật
 Mã hóa file an toàn, chống thay đổi và giả mạo
 
