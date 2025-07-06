@@ -1,110 +1,151 @@
-# ATBMTT
-Send_report
-📌 Gửi báo cáo công ty qua Server trung gian
-Đây là một hệ thống truyền file bảo mật mô phỏng tình huống gửi tài liệu từ công ty đến đối tác thông qua một server trung gian. Hệ thống đảm bảo:
+# 📌 Gửi báo cáo công ty qua Server trung gian
 
-Bảo mật nội dung bằng AES-GCM
+Đây là một hệ thống truyền file bảo mật mô phỏng tình huống **gửi báo cáo từ công ty đến đối tác thông qua một server trung gian**. Hệ thống đảm bảo:
 
-Trao đổi khóa an toàn bằng RSA 1024-bit (OAEP)
+- 🔐 **Bảo mật nội dung** bằng thuật toán **AES-GCM**
+- 🔑 **Trao đổi khóa AES** bằng **RSA 1024-bit (OAEP)**
+- 🧾 **Xác thực người gửi** bằng **chữ ký số RSA/SHA-512**
+- 🧩 **Kiểm tra toàn vẹn** bằng **SHA-512**
+- 🕒 **Ghi log thời gian giao dịch** tại server trung gian
+- 🚫 **Không có kết nối trực tiếp** giữa người gửi và người nhận
 
-Xác thực nguồn gốc bằng chữ ký số RSA/SHA-512
+---
 
-Kiểm tra toàn vẹn bằng SHA-512
+## 🧩 Kiến trúc hệ thống
 
-Ghi log thời gian giao dịch tại server trung gian
+```
+[Sender] <--> [Server trung gian] <--> [Receiver]
+          (chỉ chuyển tiếp + ghi log)
+```
 
-Không có kết nối trực tiếp giữa người gửi và người nhận
+---
 
-🧩 Kiến trúc hệ thống
+## 🛠️ Công nghệ sử dụng
 
-Sender <--> Server trung gian <--> Receiver
-          (chỉ chuyển tiếp + log)
-          
-🛠️ Công nghệ sử dụng
-Python 3.10+
+- Python 3.10+
+- Flask (giao diện web)
+- Socket TCP/IP (giao tiếp mạng)
+- PyCryptodome (mã hóa AES, RSA, SHA-512)
+- Base64, JSON (đóng gói gói tin)
 
-Flask – Giao diện web
+---
 
-Socket TCP – Truyền dữ liệu
+## 🚀 Hướng dẫn cài đặt & chạy
 
-PyCryptodome – Mã hóa AES/RSA, SHA-512
+### 1. Clone và cài đặt thư viện
 
-Base64, JSON – Đóng gói gói tin
-
-🚀 Hướng dẫn chạy chương trình
-1. Clone và cài đặt thư viện
-bash
-Sao chép
-Chỉnh sửa
+```bash
 git clone https://github.com/yourusername/report-via-proxy.git
 cd report-via-proxy
 pip install -r requirements.txt
-Yêu cầu thư viện:
-pip install pycryptodome flask
+```
 
-2. Sinh khóa RSA
+> Hoặc cài từng thư viện:
+```bash
+pip install flask pycryptodome
+```
 
+---
+
+### 2. Tạo khóa RSA cho người gửi & người nhận
+
+```bash
 python generate_keys.py
+```
 
-Tạo các file:
+Kết quả:
+- `sender/sender_private.pem` và `sender_public.pem`
+- `receiver/receiver_private.pem` và `receiver_public.pem`
 
-sender/sender_private.pem, sender_public.pem
+---
 
-receiver/receiver_private.pem, receiver_public.pem
+### 3. Chạy từng thành phần
 
-3. Chạy từng thành phần
-Server trung gian:
+**🖧 Server trung gian:**
 
-bash
-Sao chép
-Chỉnh sửa
+```bash
 python server.py
-Receiver (Người nhận):
+```
 
-bash
-Sao chép
-Chỉnh sửa
+**📥 Receiver (Người nhận):**
+
+```bash
 cd receiver
 python app_receiver.py
+# Giao diện hiển thị tại http://127.0.0.1:5003
+```
 
-Sender (Người gửi):
+**📤 Sender (Người gửi):**
 
-
+```bash
 cd sender
 python app_sender.py
+# Giao diện hiển thị tại http://127.0.0.1:5000
+```
 
-4. Cách sử dụng
-5. 
-Truy cập giao diện người gửi tại http://127.0.0.1:5000
+---
 
-Chọn file .txt bất kỳ (tối đa 10MB)
+## 💡 Cách sử dụng
 
-Gửi file → chờ phản hồi từ người nhận
+1. Truy cập `http://127.0.0.1:5000`
+2. Chọn file `.txt` để gửi (tối đa 10MB)
+3. Hệ thống sẽ:
+   - Mã hóa nội dung bằng AES-GCM
+   - Ký số, tạo metadata, mã hóa session key
+   - Gửi gói tin JSON đến server trung gian
+4. Receiver nhận, xác minh và phản hồi ACK/NACK
+5. Giao diện hiển thị kết quả gửi
 
-Trạng thái hiển thị ✅ Thành công hoặc ❌ Lỗi
+---
 
-📂 Cấu trúc thư mục
+## 📦 Cấu trúc thư mục
 
-
-├── server.py
-├── shared.py
-├── generate_keys.py
+```
+├── server.py                 # Server trung gian
+├── shared.py                # Hàm mã hóa, ký số, hash, log
+├── generate_keys.py         # Sinh khóa RSA
+│
 ├── sender/
-│   ├── app_sender.py
+│   ├── app_sender.py        # Người gửi (Flask)
 │   ├── sender_private.pem
 │   └── sender_public.pem
+│
 ├── receiver/
-│   ├── app_receiver.py
+│   ├── app_receiver.py      # Người nhận (Flask)
 │   ├── receiver_private.pem
 │   └── receiver_public.pem
-└── static/report.txt (file đã nhận)
+│
+└── static/report.txt        # File nhận thành công
+```
 
-✅ Tính năng nổi bật
-Mã hóa file an toàn, chống thay đổi và giả mạo
+---
 
-Giao tiếp gián tiếp qua server trung gian
+## ✅ Tính năng chính
 
-Hệ thống xác thực hai chiều và kiểm tra toàn vẹn
+- 🔐 Mã hóa nội dung file đảm bảo tính bí mật
+- 🧾 Ký số và kiểm tra toàn vẹn chống giả mạo, thay đổi
+- 🚫 Giao tiếp gián tiếp qua server trung gian
+- 📋 Ghi log chi tiết các lần giao dịch
 
-Log rõ ràng thời gian nhận/gửi gói tin
+---
 
+## 📚 Tài liệu tham khảo
+
+1. William Stallings – *Cryptography and Network Security*, Pearson, 2017  
+2. NIST SP 800-38D – AES-GCM Documentation  
+3. PyCryptodome: https://pycryptodome.readthedocs.io  
+4. Flask: https://flask.palletsprojects.com  
+5. Python Socket Docs: https://docs.python.org/3/library/socket.html
+
+---
+
+## 📄 Giấy phép
+
+Dự án dùng cho mục đích học tập – môn **Nhập môn An toàn Thông tin**.  
+Mọi quyền thuộc về nhóm thực hiện đề tài.
+
+---
+
+## ✨ Demo ảnh
+
+> *(Thêm ảnh giao diện hoặc log nếu có – tùy chọn)*
