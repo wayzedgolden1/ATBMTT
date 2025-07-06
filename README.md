@@ -141,4 +141,4 @@ python app_sender.py
 
 ## ✨ Demo ảnh
 
-> *(Thêm ảnh giao diện hoặc log nếu có – tùy chọn)*
+(Picture1.png)
